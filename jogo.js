@@ -13,14 +13,61 @@ const rl = readline.createInterface({
 // Códigos ANSI: cada cor é encerrada com RESET.
 const RESET = "\x1b[0m";
 const CORES = [
+  // 1-16: Cores Básicas e de Alta Intensidade (4-bit)
+  { nome: "PRETO", codigo: "\x1b[30m", simbolo: "●" },
   { nome: "VERMELHO", codigo: "\x1b[31m", simbolo: "●" },
-  { nome: "VERDE",    codigo: "\x1b[32m", simbolo: "●" },
-  { nome: "AMARELO",  codigo: "\x1b[33m", simbolo: "●" },
-  { nome: "AZUL",     codigo: "\x1b[94m", simbolo: "●" },
-  { nome: "MAGENTA",  codigo: "\x1b[35m", simbolo: "●" },
-  { nome: "CIANO",    codigo: "\x1b[36m", simbolo: "●" },
-  { nome: "BRANCO",   codigo: "\x1b[37m", simbolo: "●" },
-  { nome: "LARANJA",  codigo: "\x1b[38;5;208m", simbolo: "●" }
+  { nome: "VERDE", codigo: "\x1b[32m", simbolo: "●" },
+  { nome: "AMARELO", codigo: "\x1b[33m", simbolo: "●" },
+  { nome: "AZUL", codigo: "\x1b[34m", simbolo: "●" },
+  { nome: "MAGENTA", codigo: "\x1b[35m", simbolo: "●" },
+  { nome: "CIANO", codigo: "\x1b[36m", simbolo: "●" },
+  { nome: "BRANCO", codigo: "\x1b[37m", simbolo: "●" },
+  { nome: "CINZA_ESCURO", codigo: "\x1b[90m", simbolo: "●" },
+  { nome: "VERMELHO_CLARO", codigo: "\x1b[91m", simbolo: "●" },
+  { nome: "VERDE_CLARO", codigo: "\x1b[92m", simbolo: "●" },
+  { nome: "AMARELO_CLARO", codigo: "\x1b[93m", simbolo: "●" },
+  { nome: "AZUL_CLARO", codigo: "\x1b[94m", simbolo: "●" },
+  { nome: "MAGENTA_CLARO", codigo: "\x1b[95m", simbolo: "●" },
+  { nome: "CIANO_CLARO", codigo: "\x1b[96m", simbolo: "●" },
+  { nome: "BRANCO_BRILHANTE", codigo: "\x1b[97m", simbolo: "●" },
+
+  // 17-30: Tons Específicos e Cores Vibrantes (256-bit)
+  { nome: "LARANJA", codigo: "\x1b[38;5;208m", simbolo: "●" },
+  { nome: "ROSA_CHOQUE", codigo: "\x1b[38;5;198m", simbolo: "●" },
+  { nome: "LAVANDA", codigo: "\x1b[38;5;183m", simbolo: "●" },
+  { nome: "LIMA", codigo: "\x1b[38;5;118m", simbolo: "●" },
+  { nome: "TURQUESA", codigo: "\x1b[38;5;45m", simbolo: "●" },
+  { nome: "DOURADO", codigo: "\x1b[38;5;220m", simbolo: "●" },
+  { nome: "SALMAO", codigo: "\x1b[38;5;209m", simbolo: "●" },
+  { nome: "VIOLETA", codigo: "\x1b[38;5;93m", simbolo: "●" },
+  { nome: "MARROM_CHOCOLATE", codigo: "\x1b[38;5;130m", simbolo: "●" },
+  { nome: "BORDO", codigo: "\x1b[38;5;88m", simbolo: "●" },
+  { nome: "AZUL_MARINHO", codigo: "\x1b[38;5;19m", simbolo: "●" },
+  { nome: "VERDE_MUSGO", codigo: "\x1b[38;5;64m", simbolo: "●" },
+  { nome: "CORAL", codigo: "\x1b[38;5;203m", simbolo: "●" },
+  { nome: "ORQUIDEA", codigo: "\x1b[38;5;170m", simbolo: "●" },
+
+  // 31-50: Cores Reais / Truecolor (24-bit RGB)
+  { nome: "VERMELHO_TOMATE", codigo: "\x1b[38;2;255;99;71m", simbolo: "●" },
+  { nome: "VERDE_ESMERALDA", codigo: "\x1b[38;2;80;200;120m", simbolo: "●" },
+  { nome: "AZUL_REAL", codigo: "\x1b[38;2;65;105;225m", simbolo: "●" },
+  { nome: "AMARELO_CANARIO", codigo: "\x1b[38;2;255;239;0m", simbolo: "●" },
+  { nome: "ROXO_IMPERIAL", codigo: "\x1b[38;2;102;2;60m", simbolo: "●" },
+  { nome: "CIANO_PROFUNDO", codigo: "\x1b[38;2;0;139;139m", simbolo: "●" },
+  { nome: "LARANJA_TANGERINA", codigo: "\x1b[38;2;255;128;0m", simbolo: "●" },
+  { nome: "ROSA_BEBE", codigo: "\x1b[38;2;255;192;203m", simbolo: "●" },
+  { nome: "AZUL_CELESTE", codigo: "\x1b[38;2;135;206;235m", simbolo: "●" },
+  { nome: "VERDE_OLIVA", codigo: "\x1b[38;2;128;128;0m", simbolo: "●" },
+  { nome: "MAGENTA_VIVO", codigo: "\x1b[38;2;255;0;127m", simbolo: "●" },
+  { nome: "AMBAR", codigo: "\x1b[38;2;255;191;0m", simbolo: "●" },
+  { nome: "AZUL_TURQUESA", codigo: "\x1b[38;2;0;206;209m", simbolo: "●" },
+  { nome: "SALMAO_CLARO", codigo: "\x1b[38;2;255;160;122m", simbolo: "●" },
+  { nome: "LILAS", codigo: "\x1b[38;2;200;162;200m", simbolo: "●" },
+  { nome: "AZUL_PETROLEO", codigo: "\x1b[38;2;0;92;116m", simbolo: "●" },
+  { nome: "VERDE_MENTA", codigo: "\x1b[38;2;152;255;152m", simbolo: "●" },
+  { nome: "CAQUI", codigo: "\x1b[38;2;189;183;107m", simbolo: "●" },
+  { nome: "AREIA", codigo: "\x1b[38;2;244;164;96m", simbolo: "●" },
+  { nome: "INDIGO", codigo: "\x1b[38;2;75;0;130m", simbolo: "●" }
 ];
 
 const DIFICULDADES = {
@@ -86,13 +133,14 @@ function colorir(carta) {
 
 function mostrarTabuleiro(posicoesTemporarias = []) {
   console.log("\n========== JOGO DA MEMÓRIA ==========");
-  console.log("   " + Array.from(
+  // Ajuste de espaçamento para caber colunas de dois dígitos (como o 10)
+  console.log("     " + Array.from(
     { length: tamanho },
-    (_, coluna) => String(coluna + 1).padStart(3, " ")
-  ).join("  "));
+    (_, coluna) => String(coluna + 1).padStart(2, " ")
+  ).join("   "));
 
   for (let linha = 0; linha < tamanho; linha++) {
-    let saida = `${String(linha + 1).padStart(2, " ")}  `;
+    let saida = `${String(linha + 1).padStart(2, " ")} | `;
 
     for (let coluna = 0; coluna < tamanho; coluna++) {
       const temporaria = posicoesTemporarias.some(
@@ -100,17 +148,19 @@ function mostrarTabuleiro(posicoesTemporarias = []) {
       );
 
       if (reveladas[linha][coluna] || temporaria) {
+        // Exibe o símbolo colorido. Nota: para economizar espaço horizontal no modo extremo 10x10, 
+        // exibimos apenas o símbolo e a cor de forma compacta caso prefira, mas mantemos o formato original:
         saida += `[${colorir(tabuleiro[linha][coluna])}] `;
       } else {
-        saida += "[   ?   ] ";
+        saida += "[  ?  ] ";
       }
     }
     console.log(saida);
   }
 
-  console.log("-------------------------------------");
+  console.log("--------------------------------------------------");
   console.log(`Tentativas: ${tentativas} | Pares encontrados: ${paresEncontrados}/${totalPares}`);
-  console.log("=====================================\n");
+  console.log("==================================================\n");
 }
 
 function converterPosicao(entrada) {
@@ -233,12 +283,12 @@ async function jogar() {
   const tempoDecorrido = Date.now() - inicio;
   limparConsole();
   mostrarTabuleiro();
-  console.log("=====================================");
+  console.log("==================================================");
   console.log("PARABÉNS! VOCÊ ENCONTROU TODOS OS PARES!");
   console.log(`Total de tentativas: ${tentativas}`);
   console.log(`Total de pares: ${paresEncontrados}`);
   console.log(`Tempo: ${formatarTempo(tempoDecorrido)}`);
-  console.log("=====================================");
+  console.log("==================================================");
   rl.close();
 }
 
