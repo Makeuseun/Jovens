@@ -20,7 +20,7 @@ const CORES = [
   { nome: "MAGENTA",  codigo: "\x1b[35m", simbolo: "●" },
   { nome: "CIANO",    codigo: "\x1b[36m", simbolo: "●" },
   { nome: "BRANCO",   codigo: "\x1b[37m", simbolo: "●" },
-  { nome: "LARANJA",  codigo: "\x1b[33m", simbolo: "◆" }
+  { nome: "LARANJA",  codigo: "\x1b[33m", simbolo: "●" }
 ];
 
 const TAMANHO = 4;
