@@ -1,6 +1,7 @@
 // JOGO DA MEMÓRIA DAS CORES
 // Projeto final - Módulo 2: Lógica de Programação
 // Execução: node jogo.js
+// Contribuidores: Davi, Markson, 
 
 const readline = require("readline");
 
