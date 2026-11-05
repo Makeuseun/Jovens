@@ -61,9 +61,6 @@ node jogo.js
 ## 📁 Estrutura do projeto
 
 - `Jovens/jogo.js` — lógica principal do jogo
-- `Jovens/alunos.js` — exemplos de JavaScript e lógica básica
-- `index.html` — página HTML simples do projeto
-- `package.json` — dependências do projeto
 
 ## 🛠️ Tecnologias usadas
 
@@ -84,5 +81,3 @@ Este projeto foi pensado como exercício de lógica de programação, trabalhand
 - interação via terminal.
 
 ---
-
-Se quiser, posso também criar uma versão visual do jogo com interface web em HTML/CSS/JavaScript para funcionar no navegador.
