@@ -28,6 +28,10 @@ let reveladas = [];
 let tentativas = 0;
 let paresEncontrados = 0;
 
+function limparTerminal() {
+  console.log('\x1Bc');
+}
+
 function perguntar(texto) {
   return new Promise(resolve => rl.question(texto, resolve));
 }
@@ -170,6 +174,7 @@ async function jogar() {
     } else {
       console.log("Não são iguais. Tente memorizar as posições.");
       await perguntar("Pressione ENTER para continuar...");
+      limparTerminal();
     }
   }
 
