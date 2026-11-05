@@ -25,8 +25,8 @@ Se forem diferentes:
 - Há quatro níveis de dificuldade:
   - Fácil: 4x4
   - Médio: 6x6
-  - Difícil: 12x12
-  - Extremo: 24x24
+  - Difícil: 8x8
+  - Extremo: 10x10
 
 ## ▶️ Como executar
 
