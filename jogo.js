@@ -1,7 +1,7 @@
 // JOGO DA MEMÓRIA DAS CORES
 // Projeto final - Módulo 2: Lógica de Programação
 // Execução: node jogo.js
-// Contribuidores: Davi, Markson, 
+// Contribuidores: Davi, Markson, Rafael
 
 const readline = require("readline");
 
@@ -175,7 +175,7 @@ function formatarTempo(tempoMs) {
 async function jogar() {
   console.log("\nBem-vindo ao JOGO DA MEMÓRIA DAS CORES!");
   console.log("Escolha a dificuldade:");
-  console.log("Fácil (4x4), Médio (6x6), Difícil (12x12) ou Extremo (24x24).");
+  console.log("Fácil (4x4), Médio (6x6), Difícil (8x8) ou Extremo (10x10).");
 
   while (true) {
     const escolha = (await perguntar("Dificuldade: "))
