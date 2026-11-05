@@ -16,14 +16,22 @@ const CORES = [
   { nome: "VERMELHO", codigo: "\x1b[31m", simbolo: "●" },
   { nome: "VERDE",    codigo: "\x1b[32m", simbolo: "●" },
   { nome: "AMARELO",  codigo: "\x1b[33m", simbolo: "●" },
-  { nome: "AZUL",     codigo: "\x1b[34m", simbolo: "●" },
+  { nome: "AZUL",     codigo: "\x1b[94m", simbolo: "●" },
   { nome: "MAGENTA",  codigo: "\x1b[35m", simbolo: "●" },
   { nome: "CIANO",    codigo: "\x1b[36m", simbolo: "●" },
   { nome: "BRANCO",   codigo: "\x1b[37m", simbolo: "●" },
-  { nome: "LARANJA",  codigo: "\x1b[33m", simbolo: "●" }
+  { nome: "LARANJA",  codigo: "\x1b[38;5;208m", simbolo: "●" }
 ];
 
-const TAMANHO = 4;
+const DIFICULDADES = {
+  facil: 4,
+  medio: 6,
+  dificil: 8,
+  extremo: 10
+};
+
+let tamanho = 4;
+let totalPares = 8;
 let tabuleiro = [];
 let reveladas = [];
 let tentativas = 0;
@@ -37,6 +45,10 @@ function perguntar(texto) {
   return new Promise(resolve => rl.question(texto, resolve));
 }
 
+function limparConsole() {
+  process.stdout.write("\x1B[2J\x1B[3J\x1B[H");
+}
+
 // Embaralha as cartas usando o algoritmo Fisher-Yates.
 function embaralhar(vetor) {
   for (let i = vetor.length - 1; i > 0; i--) {
@@ -47,19 +59,24 @@ function embaralhar(vetor) {
 }
 
 function criarTabuleiro() {
-  const cartas = embaralhar([...CORES, ...CORES]);
+  const cartas = [];
+  for (let par = 0; par < totalPares; par++) {
+    const cor = CORES[par % CORES.length];
+    cartas.push(cor, cor);
+  }
+  embaralhar(cartas);
   tabuleiro = [];
 
-  for (let linha = 0; linha < TAMANHO; linha++) {
+  for (let linha = 0; linha < tamanho; linha++) {
     const novaLinha = [];
-    for (let coluna = 0; coluna < TAMANHO; coluna++) {
-      novaLinha.push(cartas[linha * TAMANHO + coluna]);
+    for (let coluna = 0; coluna < tamanho; coluna++) {
+      novaLinha.push(cartas[linha * tamanho + coluna]);
     }
     tabuleiro.push(novaLinha);
   }
 
-  reveladas = Array.from({ length: TAMANHO }, () =>
-    Array(TAMANHO).fill(false)
+  reveladas = Array.from({ length: tamanho }, () =>
+    Array(tamanho).fill(false)
   );
 }
 
@@ -69,12 +86,15 @@ function colorir(carta) {
 
 function mostrarTabuleiro(posicoesTemporarias = []) {
   console.log("\n========== JOGO DA MEMÓRIA ==========");
-  console.log("       1       2       3       4");
+  console.log("   " + Array.from(
+    { length: tamanho },
+    (_, coluna) => String(coluna + 1).padStart(3, " ")
+  ).join("  "));
 
-  for (let linha = 0; linha < TAMANHO; linha++) {
-    let saida = `${linha + 1}  `;
+  for (let linha = 0; linha < tamanho; linha++) {
+    let saida = `${String(linha + 1).padStart(2, " ")}  `;
 
-    for (let coluna = 0; coluna < TAMANHO; coluna++) {
+    for (let coluna = 0; coluna < tamanho; coluna++) {
       const temporaria = posicoesTemporarias.some(
         p => p.linha === linha && p.coluna === coluna
       );
@@ -89,7 +109,7 @@ function mostrarTabuleiro(posicoesTemporarias = []) {
   }
 
   console.log("-------------------------------------");
-  console.log(`Tentativas: ${tentativas} | Pares encontrados: ${paresEncontrados}/8`);
+  console.log(`Tentativas: ${tentativas} | Pares encontrados: ${paresEncontrados}/${totalPares}`);
   console.log("=====================================\n");
 }
 
@@ -104,8 +124,8 @@ function converterPosicao(entrada) {
   if (
     !Number.isInteger(linha) ||
     !Number.isInteger(coluna) ||
-    linha < 0 || linha >= TAMANHO ||
-    coluna < 0 || coluna >= TAMANHO
+    linha < 0 || linha >= tamanho ||
+    coluna < 0 || coluna >= tamanho
   ) {
     return null;
   }
@@ -122,7 +142,7 @@ async function escolherPosicao(numero) {
     const posicao = converterPosicao(entrada);
 
     if (!posicao) {
-      console.log("Posição inválida. Digite dois números entre 1 e 4.");
+      console.log(`Posição inválida. Digite dois números entre 1 e ${tamanho}.`);
       continue;
     }
 
@@ -139,16 +159,47 @@ function mesmasPosicoes(a, b) {
   return a.linha === b.linha && a.coluna === b.coluna;
 }
 
+function formatarTempo(tempoMs) {
+  const totalSegundos = Math.floor(tempoMs / 1000);
+  const horas = Math.floor(totalSegundos / 3600);
+  const minutos = Math.floor((totalSegundos % 3600) / 60);
+  const segundos = totalSegundos % 60;
+
+  if (horas > 0) {
+    return `${horas} h ${minutos} min ${segundos} s`;
+  }
+
+  return `${minutos} min ${segundos} s`;
+}
+
 async function jogar() {
   console.log("\nBem-vindo ao JOGO DA MEMÓRIA DAS CORES!");
-  console.log("Encontre os 8 pares de cores.");
+  console.log("Escolha a dificuldade:");
+  console.log("Fácil (4x4), Médio (6x6), Difícil (12x12) ou Extremo (24x24).");
+
+  while (true) {
+    const escolha = (await perguntar("Dificuldade: "))
+      .trim()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+    if (Object.prototype.hasOwnProperty.call(DIFICULDADES, escolha)) {
+      tamanho = DIFICULDADES[escolha];
+      break;
+    }
+    console.log("Opção inválida. Digite fácil, médio, difícil ou extremo.");
+  }
+
+  totalPares = (tamanho * tamanho) / 2;
+  console.log(`Encontre os ${totalPares} pares de cores.`);
   console.log("Informe primeiro a linha e depois a coluna.");
   console.log("Exemplo: 2 3 significa linha 2, coluna 3.");
 
-  criarTarefa = criarTabuleiro(); // Mantém a chamada correta
   criarTabuleiro();
+  const inicio = Date.now();
 
-  while (paresEncontrados < CORES.length) {
+  while (paresEncontrados < totalPares) {
+    limparConsole();
     mostrarTabuleiro();
 
     const primeira = await escolherPosicao(1);
@@ -179,11 +230,14 @@ async function jogar() {
     }
   }
 
+  const tempoDecorrido = Date.now() - inicio;
+  limparConsole();
   mostrarTabuleiro();
   console.log("=====================================");
   console.log("PARABÉNS! VOCÊ ENCONTROU TODOS OS PARES!");
   console.log(`Total de tentativas: ${tentativas}`);
   console.log(`Total de pares: ${paresEncontrados}`);
+  console.log(`Tempo: ${formatarTempo(tempoDecorrido)}`);
   console.log("=====================================");
   rl.close();
 }
