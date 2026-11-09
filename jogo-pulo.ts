@@ -1,3 +1,5 @@
+// execução: npx tsx jogo-pulo.ts
+
 class Personagem {
     nome: string;
     posicaoY: number; // 0 = no chão, > 0 = no ar
